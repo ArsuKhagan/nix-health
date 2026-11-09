@@ -1,0 +1,13 @@
+[package]
+name = "nix-health"
+version = "0.1.0"
+edition = "2021"
+authors = ["ArsuKhagan"]
+description = "A robust, read-only CLI utility to audit NixOS environments and broken symlinks."
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+colored = "2.1"
+comfy-table = "7.1"
+walkdir = "2.4"
