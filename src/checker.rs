@@ -22,11 +22,16 @@ pub fn scan_broken_symlinks<P: AsRef<Path>>(config_dir: P, _home_dir: &str) -> V
     {
         let path = entry.path();
         
-        // Игнорируем файлы блокировки (lock), так как они ссылаются на сокеты/цепи процесса
+        // Игнорируем файлы блокировки (lock)
         if let Some(name) = path.file_name().and_then(|n| n.to_str()) {
             if name == "lock" {
                 continue;
             }
+        }
+
+        // Игнорируем любые node_modules, так как это сторонний кэш со своими битыми относительными путями
+        if path.components().any(|c| c.as_os_str() == "node_modules") {
+            continue;
         }
         
         if path.is_symlink() {
