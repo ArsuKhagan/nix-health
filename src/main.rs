@@ -3,12 +3,23 @@ mod nix;
 
 use colored::*;
 
+fn print_header() {
+    println!();
+    println!(
+        "{} {} {}",
+        "::".truecolor(100, 150, 255),
+        "nix-health".bold().white(),
+        "v0.1.0 — NixOS Environment Inspector".truecolor(140, 140, 140)
+    );
+    println!(
+        "{}",
+        "─────────────────────────────────────────────────────────────────".truecolor(60, 60, 60)
+    );
+    println!();
+}
+
 fn main() {
-    // Стильный заголовок в терминале
-    println!();
-    println!("{}", "  NIX-HEALTH AUDITOR v0.1.0 ".on_cyan().black().bold());
-    println!("{}", "  [System Integrity & Store Inspector]".cyan().italic());
-    println!();
+    print_header();
 
     let home = std::env::var("HOME").unwrap_or_else(|_| "/root".to_string());
     let config_path = format!("{}/.config", home);
@@ -44,7 +55,7 @@ fn main() {
         Ok((count, total_bytes)) => {
             let gb = total_bytes as f64 / (1024.0 * 1024.0 * 1024.0);
             println!("  • Зарегистрированных путей: {}", count.to_string().cyan());
-            println!("  • Общий объем в сторе:       {:.2} GB", format!("{:.2}", gb).green().bold());
+            println!("  • Общий объем в сторе:       {:.2} GB", gb);
         }
         Err(e) => {
             println!("  {}: {}", "SKIP".dimmed(), e.dimmed());
