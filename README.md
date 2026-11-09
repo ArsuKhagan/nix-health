@@ -6,7 +6,6 @@
 
 - **Broken Symlink Audit:** Recursively scans `~/.config` for invalid symbolic links while filtering out socket lock files and ephemeral node/npm artifacts.
 - **Store Analytics:** Queries the Nix daemon (`nix path-info`) to report registered store paths and aggregate space usage in gigabytes.
-- **Privacy First:** Path outputs automatically redact your home directory path (`~`) to ensure safe sharing of command outputs and screenshots.
 - **Read-Only Operation:** Performs purely non-destructive checks without altering system state.
 
 ## Output Overview
