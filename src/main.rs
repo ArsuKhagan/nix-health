@@ -24,18 +24,18 @@ fn main() {
     let home = std::env::var("HOME").unwrap_or_else(|_| "/root".to_string());
     let config_path = format!("{}/.config", home);
 
-    // 1. Проверка симлинков
-    println!("{} Сканирование конфигураций в ~/.config...", "[1/2]".yellow().bold());
+    // 1. Scan symlinks
+    println!("{} Scanning configurations in ~/.config...", "[1/2]".yellow().bold());
     let broken_links = checker::scan_broken_symlinks(&config_path, &home);
 
     if broken_links.is_empty() {
-        println!("  {}: Все симлинки корректны, мёртвых ссылок не обнаружено.", "SUCCESS".green().bold());
+        println!("  {}: All symlinks are valid. No broken references found.", "SUCCESS".green().bold());
     } else {
-        println!("  {}: Обнаружено битых симлинков: {}", "WARNING".red().bold(), broken_links.len());
+        println!("  {}: Found broken symlinks: {}", "WARNING".red().bold(), broken_links.len());
         
         let mut table = comfy_table::Table::new();
         table.load_preset(comfy_table::presets::UTF8_FULL);
-        table.set_header(vec!["Битый симлинк (Конфиг)", "Указывает на несуществующий путь"]);
+        table.set_header(vec!["Broken Symlink (Config)", "Points to Non-existent Path"]);
 
         for link in broken_links.iter().take(15) {
             table.add_row(vec![
@@ -49,13 +49,13 @@ fn main() {
 
     println!();
 
-    // 2. Анализ /nix/store
-    println!("{} Анализ состояния /nix/store...", "[2/2]".yellow().bold());
+    // 2. Analyze /nix/store
+    println!("{} Analyzing /nix/store state...", "[2/2]".yellow().bold());
     match nix::get_store_stats() {
         Ok((count, total_bytes)) => {
             let gb = total_bytes as f64 / (1024.0 * 1024.0 * 1024.0);
-            println!("  • Зарегистрированных путей: {}", count.to_string().cyan());
-            println!("  • Общий объем в сторе:       {:.2} GB", gb);
+            println!("  • Registered store paths: {}", count.to_string().cyan());
+            println!("  • Total store size:        {:.2} GB", gb);
         }
         Err(e) => {
             println!("  {}: {}", "SKIP".dimmed(), e.dimmed());
@@ -63,6 +63,6 @@ fn main() {
     }
 
     println!();
-    println!("{}", " Аудит успешно завершён. Система не затронута (Read-Only).".dimmed());
+    println!("{}", " Audit completed successfully. System state unchanged (Read-Only).".dimmed());
     println!();
 }
